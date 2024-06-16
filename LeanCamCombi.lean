@@ -1,5 +1,7 @@
 import LeanCamCombi.Archive.CauchyDavenportFromKneser
 import LeanCamCombi.BernoulliSeq
+import LeanCamCombi.Combinatorics.Chap1.Sec1.SCD
+import LeanCamCombi.Combinatorics.Chap1.Sec1.SDSS
 import LeanCamCombi.ConvexityRefactor.Defs
 import LeanCamCombi.ConvexityRefactor.StdSimplex
 import LeanCamCombi.Corners.CombiDegen
@@ -32,7 +34,6 @@ import LeanCamCombi.Incidence
 import LeanCamCombi.Kneser.Kneser
 import LeanCamCombi.Kneser.KneserRuzsa
 import LeanCamCombi.Kneser.MulStab
-import LeanCamCombi.LittlewoodOfford
 import LeanCamCombi.Mathlib.Algebra.Group.Pointwise.Finset.Basic
 import LeanCamCombi.Mathlib.Algebra.Group.Pointwise.Set.Basic
 import LeanCamCombi.Mathlib.Algebra.Group.Pointwise.Set.BigOperators
@@ -57,15 +58,21 @@ import LeanCamCombi.Mathlib.Combinatorics.SimpleGraph.Density
 import LeanCamCombi.Mathlib.Combinatorics.SimpleGraph.Maps
 import LeanCamCombi.Mathlib.Combinatorics.SimpleGraph.Multipartite
 import LeanCamCombi.Mathlib.Combinatorics.SimpleGraph.Subgraph
+import LeanCamCombi.Mathlib.Data.Finset.Basic
 import LeanCamCombi.Mathlib.Data.Finset.Image
+import LeanCamCombi.Mathlib.Data.Finset.Insert
 import LeanCamCombi.Mathlib.Data.Finset.Lattice.Basic
 import LeanCamCombi.Mathlib.Data.Finset.PosDiffs
+import LeanCamCombi.Mathlib.Data.Finset.Powerset
 import LeanCamCombi.Mathlib.Data.List.DropRight
 import LeanCamCombi.Mathlib.Data.Multiset.Basic
 import LeanCamCombi.Mathlib.Data.Prod.Lex
+import LeanCamCombi.Mathlib.Data.Set.Basic
 import LeanCamCombi.Mathlib.Data.Set.Card
+import LeanCamCombi.Mathlib.Data.Set.Function
 import LeanCamCombi.Mathlib.Data.Set.Image
 import LeanCamCombi.Mathlib.Data.Set.Lattice
+import LeanCamCombi.Mathlib.Data.Set.Pairwise.Lattice
 import LeanCamCombi.Mathlib.Data.Set.Pointwise.Interval
 import LeanCamCombi.Mathlib.Data.Set.Pointwise.SMul
 import LeanCamCombi.Mathlib.GroupTheory.Coset.Defs

@@ -126,10 +126,4 @@ import LeanCamCombi.SimplicialComplex.Skeleton
 import LeanCamCombi.SimplicialComplex.Subdivision
 import LeanCamCombi.SliceRank
 import LeanCamCombi.SylvesterChvatal
-import LeanCamCombi.Turan.Close
-import LeanCamCombi.Turan.Counting
-import LeanCamCombi.Turan.Induced
-import LeanCamCombi.Turan.Multipartite
-import LeanCamCombi.Turan.Number
-import LeanCamCombi.Turan.Theorems
 import LeanCamCombi.VanDenBergKesten

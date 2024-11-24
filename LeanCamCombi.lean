@@ -103,13 +103,6 @@ import LeanCamCombi.Mathlib.Topology.MetricSpace.Pseudo.Defs
 import LeanCamCombi.MetricBetween
 import LeanCamCombi.MinkowskiCaratheodory
 import LeanCamCombi.MonovaryOrder
-import LeanCamCombi.Nullstellensatz.CombinatorialNullstellensatz
-import LeanCamCombi.Nullstellensatz.Degree
-import LeanCamCombi.Nullstellensatz.DegreeNew
-import LeanCamCombi.Nullstellensatz.Homogenization
-import LeanCamCombi.Nullstellensatz.Lemma21
-import LeanCamCombi.Nullstellensatz.LemmasGS
-import LeanCamCombi.Nullstellensatz.ReduceDegree
 import LeanCamCombi.OrderShatter
 import LeanCamCombi.PhD.VCDim.Basic
 import LeanCamCombi.ProofsFromTheBook.Chapter11LinesInThePlane.IncidenceGeometry

@@ -124,16 +124,6 @@ import LeanCamCombi.ProofsFromTheBook.Chapter27PigeonholeDoublecounting.Numbers
 import LeanCamCombi.ProofsFromTheBook.Chapter27PigeonholeDoublecounting.NumbersAgain
 import LeanCamCombi.ProofsFromTheBook.Chapter27PigeonholeDoublecounting.Sequences
 import LeanCamCombi.ProofsFromTheBook.Chapter27PigeonholeDoublecounting.Sums
-import LeanCamCombi.RootSystem.Base
-import LeanCamCombi.RootSystem.Basic
-import LeanCamCombi.RootSystem.BilinearForm
-import LeanCamCombi.RootSystem.Dual
-import LeanCamCombi.RootSystem.F4
-import LeanCamCombi.RootSystem.LinearAlgebraAux
-import LeanCamCombi.RootSystem.Misc
-import LeanCamCombi.RootSystem.PerfectPairing
-import LeanCamCombi.RootSystem.Reduced
-import LeanCamCombi.Rootsystem.Reduced
 import LeanCamCombi.RuzsaSzemeredi
 import LeanCamCombi.SimplicialComplex.Basic
 import LeanCamCombi.SimplicialComplex.Finite

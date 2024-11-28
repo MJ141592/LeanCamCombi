@@ -4,8 +4,8 @@ Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Yaël Dillies
 -/
 import Mathlib.Data.Set.Pointwise.SMul
+import Mathlib.Order.Chain
 import Mathlib.Order.Grade
-import LeanCamCombi.Mathlib.Order.Chain
 import LeanCamCombi.Mathlib.Order.RelIso.Group
 
 /-!

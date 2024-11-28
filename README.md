@@ -48,13 +48,17 @@ The following topics are under active development in LeanCamCombi.
 * Approximate subgroups
 * Chevalley's theorem about constructible sets
 
+See the [upstreaming dashboard](https://yaeldillies.github.io/LeanCamCombi/upstreaming) for more information.
+
 ### Current content
 
-The following topics are covered in LeanCamCombi and could be upstreamed to mathlib.
+The following topics are covered in LeanCamCombi and could be upstreamed to Mathlib.
 
 * Kneser's addition theorem
 * The Sylvester-Chvatal theorem
 * Containment of graphs
+
+See the [upstreaming dashboard](https://yaeldillies.github.io/LeanCamCombi/upstreaming) for more information.
 
 The following topics are archived because they are already covered by mathlib, but nevertheless display interesting proofs:
 * The Cauchy-Davenport theorem for `ℤ/pℤ` as a corollary of Kneser's theorem.

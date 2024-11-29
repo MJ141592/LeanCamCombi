@@ -45,6 +45,8 @@ The following topics are under active development in LeanCamCombi.
 * Discrete calculus
 * The Birkhoff representation theorem, categorical version
 * The Minkowski-Carathéodory theorem
+* Approximate subgroups
+* Chevalley's theorem about constructible sets
 
 ### Current content
 
@@ -53,7 +55,6 @@ The following topics are covered in LeanCamCombi and could be upstreamed to math
 * Kneser's addition theorem
 * The Sylvester-Chvatal theorem
 * Containment of graphs
-* Incidence algebras
 
 The following topics are archived because they are already covered by mathlib, but nevertheless display interesting proofs:
 * The Cauchy-Davenport theorem for `ℤ/pℤ` as a corollary of Kneser's theorem.
@@ -69,6 +70,7 @@ The following topics have been upstreamed to mathlib and no longer live in LeanC
 * The Erdős-Ginzburg-Ziv theorem
 * Shatterings of sets, the Sauer-Shelah lemma and the Vapnik-Chervonenkis dimension
 * Sublattices
+* Incidence algebras
 * Strongly convex functions
 * The Marica-Schönheim proof of the squarefree special case of Graham's conjecture
 * Visibility of a point through a set

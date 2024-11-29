@@ -3,14 +3,12 @@ Copyright (c) 2023 Mantas Bakšys, Yaël Dillies. All rights reserved.
 Released under Apache 2.0 license as described in the file LICENSE.
 Authors: Mantas Bakšys, Yaël Dillies
 -/
+import Mathlib.Algebra.Group.Pointwise.Set.Card
 import Mathlib.GroupTheory.Coset.Card
 import Mathlib.GroupTheory.GroupAction.Quotient
 import Mathlib.Tactic.Abel
 import Mathlib.Tactic.Linarith
-import LeanCamCombi.Mathlib.Algebra.Group.Pointwise.Set.Card
 import LeanCamCombi.Mathlib.Algebra.Group.Subgroup.Pointwise
-import LeanCamCombi.Mathlib.Algebra.Pointwise.Stabilizer
-import LeanCamCombi.Mathlib.Data.Set.Card
 import LeanCamCombi.Mathlib.Data.Set.Pointwise.SMul
 import LeanCamCombi.Mathlib.GroupTheory.GroupAction.Blocks
 
@@ -108,7 +106,7 @@ lemma stabilizer_union_mul_subset_stabilizer (hC : C.Finite) (hab : ¬(a * b) �
   rintro x hx
   rw [SetLike.mem_coe, mem_stabilizer_iff, smul_set_union] at hx
   suffices h : Disjoint (x • C) ((↑s ∩ a • Stab C) * (↑t ∩ b • Stab C)) by
-    rw [SetLike.mem_coe, mem_stabilizer_iff_smul_set_subset hC]
+    rw [SetLike.mem_coe, mem_stabilizer_set_iff_smul_set_subset hC]
     exact h.left_le_of_le_sup_right (le_sup_left.trans_eq hx)
   by_contra!
   rw [not_disjoint_iff_nonempty_inter] at this
@@ -204,16 +202,16 @@ lemma disjoint_mul_sub_card_le (b : G) (has : a ∈ s) (hCfin : C.Finite) (hsfin
       obtain ⟨c, hc, hcx⟩ := hx.1
       rw [← hcx, ← eq_mul_inv_iff_mul_eq] at hxyd
       have hyC : y ∈ a • Stab C := by
-        rw [hxyd, smul_mul_assoc, smul_mem_smul_finset_iff, ← mulStab_mul_mulStab]
+        rw [hxyd, smul_mul_assoc, smul_mem_smul_set_iff, ← mulStab_mul_mulStab]
         apply mul_mem_mul hc ((mem_stabilizer_iff hC).mpr (inv_smul_eq_iff.mpr _))
         exact Eq.symm ((mem_stabilizer_iff hC).mp (hst hd))
       replace hyst : y ∈ s := by
-        apply or_iff_not_imp_right.mp (mem_union.mp hyst)
+        apply or_iff_not_imp_right.mp hyst
         contrapose! hsC
         exact not_disjoint_iff.mpr ⟨y, hsC, hyC⟩
       rw [eq_mul_inv_iff_mul_eq, hcx] at hxyd
       rw [← hxyd]
-      exact mul_mem_mul (mem_inter.mpr ⟨hyst, hyC⟩) hd
+      exact mul_mem_mul ⟨hyst, hyC⟩ hd
 
 end Set
 

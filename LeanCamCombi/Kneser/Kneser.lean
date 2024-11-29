@@ -43,6 +43,7 @@ local notation s " +ₛ " N => Finset.image ((↑) : G → G ⧸ N) s
 local notation s " +ˢ " N => Set.image ((↑) : G → G ⧸ N) s
 
 local notation "Stab " s:arg => (MulAction.stabilizer G (s : Set G) : Set G)
+@[to_additive bleh] abbrev coset (C s : Set G) (a : G) := s ∩ a • Stab C
 
 open Lean PrettyPrinter Delaborator SubExpr
 
@@ -55,26 +56,26 @@ namespace Set
 variable {s s' t t' C : Set G} {a b : G}
 
 @[to_additive]
-lemma stabilizer_mul_subset_stabilizer (hs : (s ∩ a • Stab C).Nonempty)
-    (ht : (t ∩ b • Stab C).Nonempty) :
-    Stab ((s ∩ a • Stab C) * (t ∩ b • Stab C)) ⊆ Stab C := by
+lemma stabilizer_mul_subset_stabilizer (hs : (coset C s a).Nonempty)
+    (ht : (coset C t b).Nonempty) :
+    Stab (coset C s a * coset C t b) ⊆ Stab C := by
   obtain ⟨x, hx⟩ := hs
   obtain ⟨y, hy⟩ := ht
   obtain ⟨c, hc, (hac : _ * _ = _)⟩ := hx.2
   obtain ⟨d, hd, (hbd : _ * _ = _)⟩ := hy.2
   rw [← smul_set_subset_smul_set_iff (a := (x * y))]
   calc
-    (x * y) • Stab ((s ∩ a • Stab C) * (t ∩ b • Stab C))
-      ⊆ (s ∩ a • Stab C) * (t ∩ b • Stab C) := smul_set_stabilizer_subset <| mul_mem_mul hx hy
+    (x * y) • Stab (coset C s a * coset C t b)
+      ⊆ coset C s a * coset C t b := smul_set_stabilizer_subset <| mul_mem_mul hx hy
     _ ⊆ (a • Stab C) * (b • Stab C) := by gcongr <;> exact inter_subset_right
     _ = (a • c • Stab C) * (b • d • Stab C) := by rw [smul_coe_set hc, smul_coe_set hd]
     _ = (x * y) • Stab C := by
       rw [smul_smul, smul_smul, hac, hbd, smul_mul_smul_comm, coe_mul_coe]
 
 @[to_additive]
-lemma stabilizer_mul_ssubset_stabilizer (hs : (s ∩ a • Stab C).Nonempty)
-    (ht : (t ∩ b • Stab C).Nonempty) (hab : ¬(a * b) • Stab C ⊆ s * t) :
-    Stab ((s ∩ a • Stab C) * (t ∩ b • Stab C)) ⊂ Stab C := by
+lemma stabilizer_mul_ssubset_stabilizer (hs : (coset C s a).Nonempty)
+    (ht : (coset C t b).Nonempty) (hab : ¬(a * b) • Stab C ⊆ s * t) :
+    Stab (coset C s a * coset C t b) ⊂ Stab C := by
   obtain ⟨x, hx⟩ := id hs
   obtain ⟨y, hy⟩ := id ht
   obtain ⟨c, hc, hac⟩ := hx.2
@@ -83,11 +84,11 @@ lemma stabilizer_mul_ssubset_stabilizer (hs : (s ∩ a • Stab C).Nonempty)
     rw [smul_eq_iff_eq_inv_smul, ← smul_assoc, smul_eq_mul, mul_assoc, mul_comm c _, ← mul_assoc, ←
       mul_assoc, ← mul_assoc, mul_assoc _ a b, inv_mul_cancel (a * b), one_mul, ← smul_eq_mul,
       smul_assoc, smul_coe_set hc, smul_coe_set hd]
-  have hsub : s ∩ a • Stab C * (t ∩ b • Stab C) ⊆ (a * b) • Stab C := by
+  have hsub : coset C s a * (coset C t b) ⊆ (a * b) • Stab C := by
     apply subset_trans (mul_subset_mul inter_subset_right inter_subset_right)
     simp only [smul_mul_smul_comm, ← Subgroup.coe_mul, subset_refl]
     norm_cast
-  have hxy : x * y ∈ s ∩ a • Stab C * (t ∩ b • Stab C) := mul_mem_mul hx hy
+  have hxy : x * y ∈ coset C s a * (coset C t b) := mul_mem_mul hx hy
   rw [this] at hsub
   rw [this] at hab
   obtain ⟨z, hz, hzst⟩ := not_subset.1 hab
@@ -101,16 +102,16 @@ lemma stabilizer_mul_ssubset_stabilizer (hs : (s ∩ a • Stab C).Nonempty)
 
 @[to_additive]
 lemma stabilizer_union_mul_subset_stabilizer (hC : C.Finite) (hab : ¬(a * b) • Stab C ⊆ s * t)
-    (hCdisj : Disjoint (C : Set G) ((↑s ∩ a • Stab C) * (↑t ∩ b • Stab C))) :
-    Stab (C ∪ (s ∩ a • Stab C) * (t ∩ b • Stab C)) ⊆ Stab C := by
+    (hCdisj : Disjoint (C : Set G) (coset C s a * coset C t b)) :
+    Stab (C ∪ coset C s a * coset C t b) ⊆ Stab C := by
   rintro x hx
   rw [SetLike.mem_coe, mem_stabilizer_iff, smul_set_union] at hx
-  suffices h : Disjoint (x • C) ((↑s ∩ a • Stab C) * (↑t ∩ b • Stab C)) by
+  suffices h : Disjoint (x • C) (coset C s a * coset C t b) by
     rw [SetLike.mem_coe, mem_stabilizer_set_iff_smul_set_subset hC]
     exact h.left_le_of_le_sup_right (le_sup_left.trans_eq hx)
   by_contra!
   rw [not_disjoint_iff_nonempty_inter] at this
-  have hUn : ((⋃ y ∈ C, x • y • Stab C) ∩ ((↑s ∩ a • Stab C) * (↑t ∩ b • Stab C))).Nonempty := by
+  have hUn : ((⋃ y ∈ C, x • y • Stab C) ∩ (coset C s a * coset C t b)).Nonempty := by
     simpa [← smul_set_iUnion₂, iUnion_smul_set, ← stabilizer_coe_finset]
   simp_rw [iUnion_inter, nonempty_iUnion, ← smul_assoc, smul_eq_mul] at hUn
   obtain ⟨y, hy, hyne⟩ := hUn
@@ -121,9 +122,9 @@ lemma stabilizer_union_mul_subset_stabilizer (hC : C.Finite) (hab : ¬(a * b) �
     isBlock_subgroup.disjoint_smul_set_smul fun hxyC ↦
       hyne.not_disjoint (hCdisj.mono_left $ le_iff_subset.2 (by simpa using hxyC))
   rw [mul_stabilizer_self] at hxyC
-  have hxysub : (x * y) • Stab C ⊆ s ∩ a • Stab C * (t ∩ b • Stab C) :=
+  have hxysub : (x * y) • Stab C ⊆ coset C s a * (coset C t b) :=
     hxyC.left_le_of_le_sup_left (hxyCsubC.trans $ subset_union_left.trans hx.subset')
-  suffices s ∩ a • Stab C * (t ∩ b • Stab C) ⊂ (a * b) • Stab C by
+  suffices coset C s a * (coset C t b) ⊂ (a * b) • Stab C by
     exact isBlock_subgroup.not_smul_set_ssubset_smul_set <| hxysub.trans_ssubset this
   apply ssubset_of_subset_not_subset
   · refine (mul_subset_mul inter_subset_right inter_subset_right).trans ?_
@@ -133,10 +134,9 @@ lemma stabilizer_union_mul_subset_stabilizer (hC : C.Finite) (hab : ¬(a * b) �
 
 @[to_additive]
 lemma stabilizer_union_mul_eq_stabilizer_mul (hC : C.Finite) (hab : ¬(a * b) • Stab C ⊆ s * t)
-    (hs : (s ∩ a • Stab C : Set G).Nonempty) (ht : (↑t ∩ b • Stab C).Nonempty)
-    (hCdisj : Disjoint (C : Set G) ((↑s ∩ a • Stab C) * (↑t ∩ b • Stab C))) :
-    Stab (C ∪ ↑s ∩ a • Stab C * (↑t ∩ b • Stab C)) =
-      Stab ((↑s ∩ a • Stab C) * (↑t ∩ b • Stab C)) := by
+    (hs : (coset C s a : Set G).Nonempty) (ht : (↑t ∩ b • Stab C).Nonempty)
+    (hCdisj : Disjoint (C : Set G) (coset C s a * coset C t b)) :
+    Stab (C ∪ coset C s a * coset C t b) = Stab (coset C s a * coset C t b) := by
   congr! 1
   exact stabilizer_union_eq_right hCdisj (Set.stabilizer_mul_ssubset_stabilizer hs ht hab).subset <|
     stabilizer_union_mul_subset_stabilizer hC hab hCdisj
@@ -174,9 +174,9 @@ lemma disjoint_smul_stabilizer (hst : s ⊆ t) (has : ¬a • Stab s ⊆ t) : Di
 @[to_additive]
 lemma disjoint_mul_sub_card_le (b : G) (has : a ∈ s) (hCfin : C.Finite) (hsfin : s.Finite)
     (htfin : t.Finite) (hsC : Disjoint t (a • Stab C))
-    (hst : Stab ((s ∩ a • Stab C) * (t ∩ b • Stab C)) ⊆ Stab C) :
-    (#(Stab C) : ℤ) - #(s ∩ a • Stab C * Stab ((s ∩ a • Stab C) * (t ∩ b • Stab C))) ≤
-      #((s ∪ t) * Stab C) - #((s ∪ t) * Stab ((s ∩ a • Stab C) * (t ∩ b • Stab C))) := by
+    (hst : Stab (coset C s a * coset C t b) ⊆ Stab C) :
+    (#(Stab C) : ℤ) - #(coset C s a * Stab (coset C s a * coset C t b)) ≤
+      #((s ∪ t) * Stab C) - #((s ∪ t) * Stab (coset C s a * coset C t b)) := by
   obtain rfl | hC := C.eq_empty_or_nonempty
   · simp at hsC
     subst t
@@ -184,13 +184,13 @@ lemma disjoint_mul_sub_card_le (b : G) (has : a ∈ s) (hCfin : C.Finite) (hsfin
     simp [hs]
   have hstabCfin : (Stab C : Set G).Finite := stabilizer_finite hC hCfin
   calc
-    (#(Stab C) : ℤ) - #(s ∩ a • Stab C * Stab ((s ∩ a • Stab C) * (t ∩ b • Stab C)))
-      = #(a • Stab C \ (s ∩ a • Stab C * Stab ((s ∩ a • Stab C) * (t ∩ b • Stab C)))) := by
+    (#(Stab C) : ℤ) - #(coset C s a * Stab (coset C s a * coset C t b))
+      = #(a • Stab C \ (coset C s a * Stab (coset C s a * coset C t b))) := by
       rw [cast_ncard_sdiff ((mul_subset_mul_left hst).trans <|
         (mul_subset_mul_right inter_subset_right).trans _) hstabCfin.smul_set,
         ncard_smul_set]
       rw [smul_mul_assoc, coe_mul_coe]
-    _ ≤ #((s ∪ t) * Stab C) - #((s ∪ t) * Stab ((s ∩ a • Stab C) * (t ∩ b • Stab C))) := by
+    _ ≤ #((s ∪ t) * Stab C) - #((s ∪ t) * Stab (coset C s a * coset C t b)) := by
       rw [← cast_ncard_sdiff (mul_subset_mul_left hst) ((hsfin.union htfin).mul hstabCfin)]
       gcongr Nat.cast #(?_)
       · exact ((hsfin.union htfin).mul hstabCfin).diff _
@@ -202,9 +202,9 @@ lemma disjoint_mul_sub_card_le (b : G) (has : a ∈ s) (hCfin : C.Finite) (hsfin
       obtain ⟨c, hc, hcx⟩ := hx.1
       rw [← hcx, ← eq_mul_inv_iff_mul_eq] at hxyd
       have hyC : y ∈ a • Stab C := by
-        rw [hxyd, smul_mul_assoc, smul_mem_smul_set_iff, ← mulStab_mul_mulStab]
-        apply mul_mem_mul hc ((mem_stabilizer_iff hC).mpr (inv_smul_eq_iff.mpr _))
-        exact Eq.symm ((mem_stabilizer_iff hC).mp (hst hd))
+        rw [hxyd, smul_mul_assoc, smul_mem_smul_set_iff, ← coe_mul_coe]
+        apply mul_mem_mul hc (mem_stabilizer_iff.mpr (inv_smul_eq_iff.mpr _))
+        exact (mem_stabilizer_iff.mp (hst hd)).symm
       replace hyst : y ∈ s := by
         apply or_iff_not_imp_right.mp hyst
         contrapose! hsC
@@ -213,30 +213,17 @@ lemma disjoint_mul_sub_card_le (b : G) (has : a ∈ s) (hCfin : C.Finite) (hsfin
       rw [← hxyd]
       exact mul_mem_mul ⟨hyst, hyC⟩ hd
 
-end Set
-
-variable [DecidableEq G] {s s' t t' C : Set G} {a b : G}
-
-namespace Finset
-
 @[to_additive]
-lemma inter_mul_sub_card_le {a : G} {s t C : Finset G} (has : a ∈ s)
-    (hst : (s ∩ a • Stab C * (t ∩ a • Stab C)).mulStab ⊆ Stab C) :
-    (#(Stab C) : ℤ) -
-          #(s ∩ a • Stab C * (s ∩ a • Stab C * (t ∩ a • Stab C)).mulStab) -
-        #(t ∩ a • Stab C * (s ∩ a • Stab C * (t ∩ a • Stab C)).mulStab) ≤
-      #((s ∪ t) * Stab C) -
-        #((s ∪ t) * (s ∩ a • Stab C * (t ∩ a • Stab C)).mulStab) := by
-  obtain rfl | hC := C.eq_empty_or_nonempty
-  · simp
+lemma inter_mul_sub_card_le {a : G} {s t C : Set G} (has : a ∈ s) (hC : C.Nonempty)
+    (hst : Stab (coset C s a * coset C t a) ⊆ Stab C) :
+    (#(Stab C) : ℤ) - #(↑coset C s a * Stab (coset C s a * coset C t a)) -
+        #(↑t ∩ a • Stab C * Stab (coset C s a * coset C t a)) ≤
+      #((s ∪ t) * Stab C) - #((s ∪ t) * Stab (coset C s a * coset C t a)) := by
   calc
-    (#(Stab C) : ℤ) -
-            #(s ∩ a • Stab C * (s ∩ a • Stab C * (t ∩ a • Stab C)).mulStab) -
-          #(t ∩ a • Stab C * (s ∩ a • Stab C * (t ∩ a • Stab C)).mulStab) ≤
-        #(a • Stab C \
-            ((s ∩ a • Stab C ∪ t ∩ a • Stab C) *
-              (s ∩ a • Stab C * (t ∩ a • Stab C)).mulStab)) := by
-      rw [card_sdiff, Int.ofNat_sub (card_le_card _), card_smul_finset]
+    (#(Stab C) : ℤ) - #(coset C s a * Stab (coset C s a * coset C t a)) -
+      #(t ∩ a • Stab C * Stab (coset C s a * coset C t a)) ≤
+        #(a • Stab C \ ((coset C s a ∪ t ∩ a • Stab C) * Stab (coset C s a * coset C t a))) := by
+      rw [cast_ncard_sdiff, ncard_smul_set]
       · rw [union_mul, le_sub_iff_add_le]
         refine le_trans (add_le_add_left (Int.ofNat_le.mpr $ card_union_le _ _) _) ?_
         norm_num
@@ -246,7 +233,7 @@ lemma inter_mul_sub_card_le {a : G} {s t C : Finset G} (has : a ∈ s)
         refine subset_trans (mul_subset_mul_right inter_subset_right) ?_
         simp only [smul_mul_assoc, mulStab_mul_mulStab, Subset.rfl]
     _ ≤ #((s ∪ t) * Stab C) -
-          #((s ∪ t) * (s ∩ a • Stab C * (t ∩ a • Stab C)).mulStab) := by
+          #((s ∪ t) * Stab (coset C s a * coset C t a)) := by
       rw [← Int.ofNat_sub (card_le_card (mul_subset_mul_left hst)),
         ← card_sdiff (mul_subset_mul_left hst)]
       norm_cast
@@ -266,6 +253,12 @@ lemma inter_mul_sub_card_le {a : G} {s t C : Finset G} (has : a ∈ s)
       rw [eq_mul_inv_iff_mul_eq, hcx] at hxyd
       rw [← hxyd]
       exact mul_mem_mul (mem_inter.mpr ⟨hyst, hyC⟩) hd
+
+end Set
+
+variable [DecidableEq G] {s s' t t' C : Set G} {a b : G}
+
+namespace Finset
 
 set_option linter.dupNamespace false in
 @[to_additive]
